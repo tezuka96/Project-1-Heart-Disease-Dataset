@@ -2,7 +2,9 @@
 
 ## Hardware Specifications
 AMD Ryzen 7 3700x
+
 NVIDIA Geforce RTX 3050
+
 32GB 3200MHZ DDR4
 
 ## 1. Summary

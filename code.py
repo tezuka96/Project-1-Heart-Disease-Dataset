@@ -2,7 +2,7 @@
 """
 Created on Wed Jun 22 00:18:07 2022
 
-@author: Ryzen
+@author: Hilman
 
 Project 1
 Heart Disease Dataset
@@ -15,7 +15,7 @@ from keras import layers, optimizers, losses, metrics
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from tensorflow.keras.callbacks import EarlyStopping, TensorBoard
+from keras.callbacks import EarlyStopping, TensorBoard
 import datetime, os
 import pandas as pd
 
@@ -71,19 +71,28 @@ model.add(layers.Dense(nClass, activation='softmax'))
 #5. View your model
 model.summary()
 
+#Use in iPython console 
+tf.keras.utils.plot_model(model, show_shapes=True)
+
 #%%
 #6. Compile model
+BATCH_SIZE = 128
 model.compile(optimizer='adam',loss='sparse_categorical_crossentropy',metrics=['accuracy'])
 
 #7. Define callback functions
-base_log_path = r"C:\Users\Ryzen\Documents\tensorflow\tb_logs"
+base_log_path = r"C:\Users\Ryzen\Documents\tensorflow\GitHub\Project-1-Heart-Disease-Dataset\tb_logs"
 log_path= os.path.join(base_log_path, datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + '__Heart_Disease_Dataset')
-es = EarlyStopping(monitor='val_loss', patience=10)
+es = EarlyStopping(monitor='val_loss', patience=15)
 tb = TensorBoard(log_dir=log_path)
 
 #Train model
-history = model.fit(x_train,y_train, validation_data=(x_test, y_test), batch_size=128, epochs=10000, callbacks=[es,tb])
+history = model.fit(x_train,y_train, validation_data=(x_test, y_test), batch_size=BATCH_SIZE, epochs=1000, callbacks=[es,tb])
 
+#%%
+#Evaluate with test data for wild testing
+test_result = model.evaluate(x_test,y_test,batch_size=BATCH_SIZE)
+print(f"Test loss = {test_result[0]}")
+print(f"Test accuracy = {test_result[1]}")
 #%%
 from numba import cuda 
 device = cuda.get_current_device()
